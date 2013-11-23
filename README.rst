@@ -133,6 +133,28 @@ transition period:
         -TG2.1-v1
         <TG2.1-v2
 
+Develop Eggs
+===============
+
+BPV loads the current version of develop eggs listed in {buildout:develop} and
+uses those versions to override the explicit pins loaded from other sources.
+
+It will also check for develop-packages listed in the platform-versions-config
+section and unpin those entirely, so that they pick up whatever the highest
+version is.
+
+::
+    [platform-versions-config]
+    default-platform = production
+    sources =
+        some_config_enhance_file.cfg
+        another_config_enhance_file.cfg
+    develop-packages = flup
+        tgext.admin
+
+
+
+
 Related Projects
 ================
 
