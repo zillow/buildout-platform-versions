@@ -15,7 +15,7 @@ setup(
     version = __VERSION__,
     author = "Jonathan Ultis",
     author_email = "jonathanu@zillow.com",
-    description = "improved version management",
+    description = "Dependency version management forklift for buildout.",
     zip_safe = True,
     license = read("LICENSE"),
     keywords = "zillow",
