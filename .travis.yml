@@ -5,6 +5,6 @@ python:
 install:
   - ./setup_clean_virtualenv.sh
   - ~/env/clean/bin/python bootstrap.py
-  - bin/buildout -U -S
+  - bin/buildout -U 
 script:
   - bin/test
