@@ -144,6 +144,7 @@ section and unpin those entirely, so that they pick up whatever the highest
 version is.
 
 ::
+
     [platform-versions-config]
     default-platform = production
     sources =
