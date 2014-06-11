@@ -103,7 +103,7 @@ class PlatformVersions(object):
         return platform_env
 
     def _get_platform_from_config(self):
-        if self.config_section in self.buildout:
+        if self._config:
             platform_env = self._config.get ("default-platform", None)
             if platform_env:
                 platform_env = platform_env.strip()
