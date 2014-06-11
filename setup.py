@@ -1,4 +1,4 @@
-__VERSION__ = "1.2.1"
+__VERSION__ = "1.2.2"
 
 import os
 from setuptools import setup
