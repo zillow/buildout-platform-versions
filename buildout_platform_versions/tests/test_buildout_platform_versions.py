@@ -47,7 +47,7 @@ def test_regression():
     assert buildout["versions"]["beta"] == "2.0"
     assert_equal (2, len (buildout["versions"]))
 
-# basic use of the extra versions extension 
+# basic use of the extra versions extension
 versions_1_cfg = '''
 [current]
 beta = 2.0
@@ -151,10 +151,34 @@ def test_read_package_name_from_setup_py_bad():
     vv = read_package_name_from_setup_py ("/some/path/that/doesnt/exist/120i109jsjiasidniosandionwdaw")
     nt.assert_equal (None, vv)
 
+
 def test_read_package_name_from_pkg_resources_bad():
     from buildout_platform_versions import read_package_name_from_pkg_resources
     vv = read_package_name_from_pkg_resources ("/some/path/that/doesnt/exist/120i109jsjiasidniosandionwdaw")
     nt.assert_equal (None, vv)
+
+
+def test_parse_setup_py_version_output_good():
+    from buildout_platform_versions import parse_setup_py_version_output
+    name, version = "foo", "1.0.0"
+    output = "{name}\n{version}".format(
+        name=name, version=version
+    )
+    assert parse_setup_py_version_output(output) == (name, version)
+
+
+def test_parse_setup_py_version_output_extra_output():
+    """
+    with additional output in the console, name and version should
+    still be returned.
+    """
+    from buildout_platform_versions import parse_setup_py_version_output
+    name, version = "foo", "1.0.0"
+    output = "ooga\nbooga\n{name}\n{version}".format(
+        name=name, version=version
+    )
+    assert parse_setup_py_version_output(output) == (name, version)
+
 
 def test_platform_versions():
     buildout = Buildout(_testfname('extra.cfg'), [])
@@ -190,7 +214,7 @@ def test_develop_eggs_platform_versions():
     assert buildout["versions"]["alpha"] == "1.0"
     assert buildout["versions"]["beta"] == "2.0"
     assert buildout["versions"]["gamma"] == "1.0.0.d"
-    assert len(buildout["versions"]) == 3 
+    assert len(buildout["versions"]) == 3
 
 
 def test_platform_versions_env():
@@ -207,5 +231,3 @@ def test_platform_versions_env():
         os.environ["ZILLOW_PYTHON_PLATFORM_VERSION"] = old_env
     else:
         del os.environ["ZILLOW_PYTHON_PLATFORM_VERSION"]
-
-

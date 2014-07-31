@@ -36,7 +36,7 @@ class PlatformVersions(object):
                           the new versions.
         '''
         self.buildout = buildout
-        
+
         self.config_section = None
         self.source_section = None
         self.sources = None
@@ -119,12 +119,12 @@ class PlatformVersions(object):
         else:
             platform_env = None
 
-        return platform_env 
+        return platform_env
 
     def _get_platform(self):
         '''Figure out what the source section name is.'''
         # figure out which section to load version pins from
-        
+
         # if we should check for an environment variable, try it
         platform_env = self._get_platform_from_env ()
 
@@ -140,7 +140,7 @@ class PlatformVersions(object):
         cp = ConfigParser.ConfigParser ()
         for file_name in self.sources:
             _load_config (cp, file_name)
-        
+
         config_enhance.enhance(cp)
 
         if cp.has_section (self.source_section):
@@ -153,7 +153,7 @@ class PlatformVersions(object):
                 LOG.info ("\t%s", section)
 
         return new_versions
-     
+
     def load_develop_packages(self):
         pkgs = []
         if self.buildout is not None:
@@ -174,7 +174,7 @@ class PlatformVersions(object):
 
         # report the development packages
         return pkgs
- 
+
     def load_composite_versions(self):
         # record the explicitly pinned versions in this buildout. They'll
         # trump the platform.
@@ -182,7 +182,7 @@ class PlatformVersions(object):
 
         # load up the extra versions from various sources
         new_versions = self.load_platform_versions()
-        
+
         # trump with the explicit versions in this project
         new_versions.update (cur_versions)
 
@@ -194,10 +194,10 @@ class PlatformVersions(object):
             else:
                 LOG.info ("Pinning '%s' to '%s' for development.", pkg[0], pkg[1])
                 new_versions[pkg[0]] = pkg[1]
-        
+
         self.versions = new_versions
         return self.versions
-    
+
     def apply_new_versions(self):
         '''
 
@@ -212,7 +212,7 @@ class PlatformVersions(object):
 
         # set the new version information for use by easy_install
         zc.buildout.easy_install.default_versions (self.versions)
-        
+
         for k, v in self.versions.iteritems():
             LOG.debug ("'%s' = '%s'", k, v)
 
@@ -235,12 +235,21 @@ def read_package_name_from_setup_py(path):
             vv = result[0]
             if proc.returncode != 0:
                 raise Exception("'%s' failed with return code '%d'" % (" ".join(cmd), proc.returncode))
-            
+
             # check_output was added in python 2.7. Use it when available
             #vv = subprocess.check_output([sys.executable, setup_py, "--name", "--version"])
-            return vv.split()
+            return parse_setup_py_version_output(vv)
     except (Exception, IOError):
         LOG.exception("Unable to run '%s'", setup_py)
+
+
+def parse_setup_py_version_output(output):
+    """
+    given output from a setup.py about name and version,
+    return the name and version as a tuple.
+    """
+    return tuple(output.split()[-2:])
+
 
 def read_package_name_from_pkg_resources(path):
     try:
@@ -258,7 +267,7 @@ def lookup_develop_distributions(paths):
         pkg = read_package_name_from_setup_py(path)
         if pkg is None:
             pkg = read_package_name_from_pkg_resources(path)
-        
+
         if pkg is None:
             LOG.error ("Unable to find a package name at '%s'", path)
         else:
@@ -289,7 +298,7 @@ def _load_config (cc, uri):
     buf = StringIO.StringIO (content)
     cc.readfp (buf, uri)
 
- 
+
 def start(buildout):
     platform = PlatformVersions (buildout)
     platform.apply_to_buildout ()
@@ -297,4 +306,3 @@ def start(buildout):
 
 def finish(buildout):
     pass
-    
